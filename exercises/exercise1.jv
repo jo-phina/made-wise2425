@@ -1,5 +1,5 @@
 pipeline AirportPipeline {
-    // Pipeline definition
+    // Pipeline definition block
     AirportExtractor
         ->AirportTextFileInterpreter
         ->AirportCSVInterpreter
