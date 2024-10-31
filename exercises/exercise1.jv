@@ -12,17 +12,17 @@ pipeline AirportPipeline {
     }
 
     block AirportTableInterpreter oftype TableInterpreter {
-        header: true;
+        header: false;
         columns: [
-            "column_1" oftype integer,  // Lfd. Nummer
-            "column_2" oftype text,     // Name des Flughafens
-            "column_3" oftype text,     // Ort
-            "column_4" oftype text,     // Land
-            "column_5" oftype text,     // IATA
-            "column_6" oftype text,     // ICAO
-            "column_7" oftype decimal,  // Lattitde
-            "column_8" oftype decimal,  // Longitude
-            "column_9" oftype decimal   // Altitude
+            "Lfd. Nummer" oftype integer,  // Lfd. Nummer
+            "Name des Flughafens" oftype text,     // Name des Flughafens
+            "Ort" oftype text,     // Ort
+            "Land" oftype text,     // Land
+            "IATA" oftype text,     // IATA
+            "ICAO" oftype text,     // ICAO
+            "Lattitde" oftype decimal,  // Lattitde
+            "Longitude" oftype decimal,  // Longitude
+            "Altitude" oftype integer   // Altitude
         ];
     }
 
