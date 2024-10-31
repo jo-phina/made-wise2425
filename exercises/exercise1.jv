@@ -1,15 +1,3 @@
-valuetype BIGINT oftype integer {
-    constraints: [  ];
-}
-
-valuetype FLOAT oftype decimal {
-    constraints: [  ];
-}
-
-valuetype TEXT oftype text {
-    constraints: [  ];
-}
-
 pipeline AirportPipeline {
 
     // Block definitions
@@ -26,15 +14,15 @@ pipeline AirportPipeline {
     block AirportTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
-            "column_1" oftype BIGINT,
-            "column_2" oftype TEXT,
-            "column_3" oftype TEXT,
-            "column_4" oftype TEXT,
-            "column_5" oftype TEXT,
-            "column_6" oftype TEXT,
-            "column_7" oftype FLOAT,
-            "column_8" oftype FLOAT,
-            "column_9" oftype BIGINT
+            "column_1" oftype integer,
+            "column_2" oftype text,
+            "column_3" oftype text,
+            "column_4" oftype text,
+            "column_5" oftype text,
+            "column_6" oftype text,
+            "column_7" oftype decimal,
+            "column_8" oftype decimal,
+            "column_9" oftype integer
         ];
     }
 
