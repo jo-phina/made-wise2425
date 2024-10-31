@@ -9,20 +9,21 @@ pipeline AirportPipeline {
 
     block AirportCSVInterpreter oftype CSVInterpreter {
         delimiter: ";";
+        enclosing: '';
     }
 
     block AirportTableInterpreter oftype TableInterpreter {
         header: false;
         columns: [
-            "Lfd. Nummer" oftype integer,  // Lfd. Nummer
-            "Name des Flughafens" oftype text,     // Name des Flughafens
-            "Ort" oftype text,     // Ort
-            "Land" oftype text,     // Land
-            "IATA" oftype text,     // IATA
-            "ICAO" oftype text,     // ICAO
-            "Lattitde" oftype decimal,  // Lattitde
-            "Longitude" oftype decimal,  // Longitude
-            "Altitude" oftype integer   // Altitude
+            "Lfd. Nummer" oftype integer,
+            "Name des Flughafens" oftype text,
+            "Ort" oftype text,
+            "Land" oftype text,
+            "IATA" oftype text,
+            "ICAO" oftype text,
+            "Lattitde" oftype decimal,
+            "Longitude" oftype decimal,
+            "Altitude" oftype integer
         ];
     }
 
