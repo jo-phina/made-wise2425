@@ -10,26 +10,26 @@ pipeline TreePlantingPipeline {
     // CONSTRAINTS AND VALUETYPE DEFINITIONS
 
     // constraint for stadtteil "Vogelsang"
-    constraint StadtteilAllowedList oftype RegexConstraint {
+    constraint StadtteilValid oftype RegexConstraint {
         regex: /^Vogelsang*/;
     }
 
     // define type for allowed areas (Stadtteile)
     valuetype stadtteil oftype text {
         constraints: [
-            StadtteilAllowedList,
+            StadtteilValid,
         ];
     }
     
     // constraint for correct format of geo-coordinates
-    constraint GeoCoordinateAllowedFormat oftype RegexConstraint {
+    constraint GeoCoordinatesValid oftype RegexConstraint {
         regex: /\d{1,3}\.\d*/;
     }
 
     // define type for geo-coordinates
     valuetype geocoordinate oftype text {
         constraints: [
-            GeoCoordinateAllowedFormat,
+            GeoCoordinatesValid,
         ];
     }
 
