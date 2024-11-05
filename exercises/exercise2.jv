@@ -1,5 +1,12 @@
 pipeline TreePlantingPipeline {
 
+    // PIPELINE DEFINITION
+    
+    TreeCSVExtractor
+        -> TreeTableInterpreter
+        -> TreeLoader;
+
+
     // CONSTRAINTS AND VALUETYPE DEFINITIONS
 
     // constraint for stadtteil "Vogelsang"
@@ -50,12 +57,5 @@ pipeline TreePlantingPipeline {
         table: "trees";
         file: "./trees.sqlite";
     }
-
-
-    // PIPELINE DEFINITION
-    
-    TreeCSVExtractor
-        -> TreeTableInterpreter
-        -> TreeLoader;
 
 }
