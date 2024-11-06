@@ -40,12 +40,20 @@ Still today, growing up bilingual is often seen as a problem for developing prop
 <!-- List of work packages ordered sequentially, each pointing to an issue with more details. -->
 
 
-1. Data Collection and Cleaning
-2. Exploratory Data Analysis
-3. Statistical Analysis
-4. Results Interpretation and Report Writing
+1. Project Plan [#1][i1]
+2. Data Collection, Cleaning and Preprocessing [#2][i2]
+3. Inspection of Data Structures [#3][i3]
+4. Automated tests for the project [#4][i4]
+5. Exploratory Data Analysis [#5][i5]
+6. Statistical Analysis [#6][i6]
+7. Results Interpretation and Report Writing [#7][i7]
 
-1. Example Issue [#1][i1]
-2. ...
 
-[i1]: https://github.com/jvalue/made-template/issues/1
+
+[i1]: https://github.com/jo-phina/made-wise2425/issues/1#issue-2637797643
+[i2]: https://github.com/jo-phina/made-wise2425/issues/2#issue-2637800699
+[i3]: https://github.com/jo-phina/made-wise2425/issues/3#issue-2637802551
+[i4]: https://github.com/jo-phina/made-wise2425/issues/4#issue-2637808716
+[i5]: https://github.com/jo-phina/made-wise2425/issues/5#issue-2637814786
+[i6]: https://github.com/jo-phina/made-wise2425/issues/6#issue-2637817154
+[i7]: https://github.com/jo-phina/made-wise2425/issues/7#issue-2637819270
