@@ -2,6 +2,10 @@ import os
 import requests
 import zipfile
 
+# TO DO:
+#   - get ACS_language_spoken_at_home data via API
+#   - adapt code to download both data sets
+
 def download_and_extract_csv(data_set, url, data_dir, save_as):
     # 1 - download the file from the URL
     print(f'Downloading data set "{data_set}" from: {url}')
