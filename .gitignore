@@ -1,3 +1,9 @@
 .DS_Store
 /data/*
 !/data/.gitkeep
+exercises/stadt-neuss-herbstpflanzung-2023.csv
+exercises/rhein-kreis-neuss-flughafen-weltweit.csv
+exercises/airports.sqlite
+exercises/trees.sqlite
+project/pipeline_changes.py
+project/ToDo.txt
