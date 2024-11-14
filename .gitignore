@@ -7,3 +7,6 @@ exercises/airports.sqlite
 exercises/trees.sqlite
 project/pipeline_changes.py
 project/ToDo.txt
+quit
+pipeline.txt
+project/pipeline_ACS_new.py
