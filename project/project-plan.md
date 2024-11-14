@@ -24,13 +24,22 @@ Still today, growing up bilingual is often seen as a problem for developing prop
 * Data Type: SAS
 * Data License: PUF OECD data
 
-"The PIAAC U.S. 2017 public-use file (PUF) contains individual unit data including both responses to the background questionnaire and the cognitive assessment from the third U.S. PIAAC data collection, completed in 2017. Statistical disclosure control treatments were applied due to confidentiality concerns. For more details on the PUF, please refer to Appendix E of the U.S. PIAAC Technical Report (NCES 2020-224)." (cited from https://nces.ed.gov/pubsearch/pubsinfo.asp?pubid=2020222)
+"The PIAAC U.S. 2017 public-use file (PUF) contains individual unit data including both responses to the background questionnaire and the cognitive assessment from the third U.S. PIAAC data collection, completed in 2017. Statistical disclosure control treatments were applied due to confidentiality concerns. For more details on the PUF, please refer to Appendix E of the U.S. PIAAC Technical Report (NCES 2020-224)."
+*(cited from https://nces.ed.gov/pubsearch/pubsinfo.asp?pubid=2020222)*
 
 ### Datasource2: ACS S1601 Language Spoken at Home 
 * Metadata URL: https://www.census.gov/acs/www/about/why-we-ask-each-question/language/
+* API Metadat Link: https://api.census.gov/data/2022/acs/acs1/subject
 * Data URL: https://data.census.gov/table/ACSST1Y2022.S1601?q=Language
-* Data Type: possible as CSV
-* Data License: 
+* Data Type: possible as CSV via API
+* Data License: CC0 1.0 Universal
+
+"The American Community Survey (ACS) is an ongoing survey that provides data every year -- giving communities the current information they need to plan investments and services. The ACS covers a broad range of topics about social, economic, demographic, and housing characteristics of the U.S. population. The subject tables include the following geographies: nation, all states (including DC and Puerto Rico), all metropolitan areas, all congressional districts, all counties, all places and all tracts. Subject tables provide an overview of the estimates available in a particular topic. The data are presented as both counts and percentages. There are over 66,000 variables in this dataset."
+*(cited from https://api.census.gov/data/2012/acs/acs5/subject)*
+
+
+**NOTE:** I am having trouble with getting the ACS data via API - it is all very confusing and I am still working on it. I will manage, but it takes more time than expected, because I need to understand a whole bunch of things that are new to me.
+
 
 ### Datasource3: PISA 2018 or 2015
 * Metadata URL: https://github.com/awesomedata/apd-core/blob/master/core/Education/PISA.yml
