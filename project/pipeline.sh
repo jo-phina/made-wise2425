@@ -1,3 +1,3 @@
 #!/bin/bash
-pip install -r requirements.txt     # -r because it is a requirements-file
+pip install -r requirements.txt
 python ./project/pipeline.py
