@@ -45,7 +45,7 @@ pipeline bondIssuancePipeline {
     block bondIssuanceTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
-            "Country Code" oftype ValidCountryCode,
+            "Country Code" oftype CountryCodeAlpha3,
             "Bond Issuance Share" oftype ValidBondIssuanceShare
         ];
     }
@@ -58,16 +58,6 @@ pipeline bondIssuancePipeline {
 
 
 // VALUE TYPES AND CONSTRAINTS FOR bondIssuance
-
-    // value type for Country Code
-    valuetype ValidCountryCode oftype text  {
-        constraints: [NonEmptyCountryCode];
-    }
-
-    // CountryCode must not be empty
-    constraint NonEmptyCountryCode oftype LengthConstraint {
-        minLength: 3;
-    }
 
     // value type for Bond Issuance Share
     valuetype ValidBondIssuanceShare oftype decimal {
@@ -133,7 +123,7 @@ pipeline gdpPerCapitaPipeline {
     block gdpPerCapitaTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
-            "Country Code" oftype ValidCountryCode,
+            "Country Code" oftype CountryCodeAlpha3,
             "GDP per Capita" oftype ValidGDP
         ];
     }
@@ -146,16 +136,6 @@ pipeline gdpPerCapitaPipeline {
 
 
 // VALUE TYPES AND CONSTRAINTS FOR gdpPerCapita
-
-    // value type for Country Code
-    valuetype ValidCountryCode oftype text  {
-        constraints: [NonEmptyCountryCode];
-    }
-
-    // CountryCode must not be empty
-    constraint NonEmptyCountryCode oftype LengthConstraint {
-        minLength: 3;
-    }
 
     // value type for GDP per Capita
     valuetype ValidGDP oftype decimal {
