@@ -1,13 +1,13 @@
-pipeline CountryStatsPipeline {
-    CountryStatsHTTPExtractor 
-        -> CountryStatsXLSXInterpreter
-        -> CountryStatsSheetPicker
-        -> CountryStatsHeaderWriter
-        -> CountryStatsCellRangeSelector
-        -> CountryStatsTableInterpreter
+pipeline bondIssuancePipeline {
+    bondIssuanceHTTPExtractor 
+        -> bondIssuanceXLSXInterpreter
+        -> bondIssuanceSheetPicker
+        -> bondIssuanceHeaderWriter
+        -> bondIssuanceCellRangeSelector
+        -> bondIssuanceTableInterpreter
         // -> BondIssuanceTableInterpreter
         // -> GDPperCapitaTableInterpreter
-        -> CountryStatsSQLite
+        -> bondIssuanceSQLite
         // -> BondIssuanceSQLite
         // -> GDPperCapitaSQLite
     ;
@@ -16,26 +16,26 @@ pipeline CountryStatsPipeline {
 // BLOCK DEFINITIONS
     
     // Input: None, Output type: File
-    block CountryStatsHTTPExtractor oftype HttpExtractor {
+    block bondIssuanceHTTPExtractor oftype HttpExtractor {
         url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
     }
     
     //  input: XLSX-file,  output: Workbook containing Sheets
-    block CountryStatsXLSXInterpreter oftype XLSXInterpreter { }
+    block bondIssuanceXLSXInterpreter oftype XLSXInterpreter { }
     
     // Input type: Workbook, Output type: Sheet
-    block CountryStatsSheetPicker oftype SheetPicker {
+    block bondIssuanceSheetPicker oftype SheetPicker {
         sheetName: "Figure S5.1.2";
     }
 
     // Input type: Sheet, Output type: Sheet
-    block CountryStatsHeaderWriter oftype CellWriter {
+    block bondIssuanceHeaderWriter oftype CellWriter {
         at: range P2:S2;
         write: ["Country Code", "Economy", "GDP per Capita", "Bond Issuance Share"];
     }    
 
     // Input type: Sheet, Output type: Sheet
-    block CountryStatsCellRangeSelector oftype CellRangeSelector {
+    block bondIssuanceCellRangeSelector oftype CellRangeSelector {
         select: range P2:S45;
     }
     
@@ -43,12 +43,10 @@ pipeline CountryStatsPipeline {
 
     // Input type: Sheet, Output type: Table
     // select columns
-    block CountryStatsTableInterpreter oftype TableInterpreter {
+    block bondIssuanceTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
             "Country Code" oftype ValidCountryCode,    // CountryCodeAlpha3, what's up here?
-            "Economy" oftype text,
-            "GDP per Capita" oftype ValidGDP,
             "Bond Issuance Share" oftype ValidBondIssuanceShare
         ];
     }
@@ -56,8 +54,112 @@ pipeline CountryStatsPipeline {
 
 
     // save as SQLite
-    block CountryStatsSQLite oftype SQLiteLoader {
-        table: "country-stats";
+    block bondIssuanceSQLite oftype SQLiteLoader {
+        table: "bondIssuance";
+        file: "./country-stats.sqlite";
+    }
+
+
+// VALUE TYPES AND CONSTRAINTS
+
+    // value type for Country Code
+    valuetype ValidCountryCode oftype text  {
+        constraints: [NonEmptyCountryCode];
+    }
+
+    // CountryCode must not be empty
+    constraint NonEmptyCountryCode oftype LengthConstraint {
+        minLength: 3;
+    }
+
+
+    // value type for GDP per Capita
+    valuetype ValidGDP oftype decimal {
+        constraints: [PositiveGDP];
+    }
+
+    // GDP per Capita must be decimal >0
+    constraint PositiveGDP on decimal:
+        value > 0;
+    
+
+    // value type for Bond Issuance Share
+
+    valuetype ValidBondIssuanceShare oftype decimal {
+        constraints: [
+            RangeBondIssuanceShare, 
+            NonEmptyBondIssuanceShare
+            ];
+    }
+
+    // Bond Issuance Share must be decimal between 0 and t and not empty
+    constraint RangeBondIssuanceShare on decimal:
+        value >= 0 and value <=1;
+
+    constraint NonEmptyBondIssuanceShare oftype LengthConstraint {
+        minLength: 1;
+    }
+
+}
+
+pipeline gdpPerCapitaPipeline {
+    gdpPerCapitaHTTPExtractor 
+        -> gdpPerCapitaXLSXInterpreter
+        -> gdpPerCapitaSheetPicker
+        -> gdpPerCapitaHeaderWriter
+        -> gdpPerCapitaCellRangeSelector
+        -> gdpPerCapitaTableInterpreter
+        // -> BondIssuanceTableInterpreter
+        // -> GDPperCapitaTableInterpreter
+        -> gdpPerCapitaSQLite
+        // -> BondIssuanceSQLite
+        // -> GDPperCapitaSQLite
+    ;
+
+
+// BLOCK DEFINITIONS
+    
+    // Input: None, Output type: File
+    block gdpPerCapitaHTTPExtractor oftype HttpExtractor {
+        url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
+    }
+    
+    //  input: XLSX-file,  output: Workbook containing Sheets
+    block gdpPerCapitaXLSXInterpreter oftype XLSXInterpreter { }
+    
+    // Input type: Workbook, Output type: Sheet
+    block gdpPerCapitaSheetPicker oftype SheetPicker {
+        sheetName: "Figure S5.1.2";
+    }
+
+    // Input type: Sheet, Output type: Sheet
+    block gdpPerCapitaHeaderWriter oftype CellWriter {
+        at: range P2:S2;
+        write: ["Country Code", "Economy", "GDP per Capita", "Bond Issuance Share"];
+    }    
+
+    // Input type: Sheet, Output type: Sheet
+    block gdpPerCapitaCellRangeSelector oftype CellRangeSelector {
+        select: range P2:S45;
+    }
+    
+
+
+    // Input type: Sheet, Output type: Table
+    // select columns
+    block gdpPerCapitaTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "Country Code" oftype ValidCountryCode,    // CountryCodeAlpha3, what's up here?
+            "GDP per Capita" oftype ValidGDP
+        ];
+    }
+
+
+
+    // save as SQLite
+    block gdpPerCapitaSQLite oftype SQLiteLoader {
+        table: "gdpPerCapita";
         file: "./country-stats.sqlite";
     }
 
