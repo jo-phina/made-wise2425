@@ -2,8 +2,8 @@ pipeline TrainGoodsPipeline {
     SustainableBondsHTTPExtractor 
         -> SustainableBondsXLSXInterpreter
         -> SustainableBondsSheetPicker
-        -> SustainableBondsCellRangeSelector
         -> SustainableBondsHeaderWriter
+        -> SustainableBondsCellRangeSelector
         -> SustainableBondsTableInterpreter
         -> BondIssuance
     ;
@@ -52,7 +52,7 @@ pipeline TrainGoodsPipeline {
     // save as SQLite
     block BondIssuance oftype SQLiteLoader {
         table: "bondIssuance";
-        file: "./bondIssuance";
+        file: "./bondIssuance.sqlite";
     }
 
 
