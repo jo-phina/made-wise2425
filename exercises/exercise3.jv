@@ -1,0 +1,99 @@
+pipeline TrainGoodsPipeline {
+    SustainableBondsHTTPExtractor 
+        -> SustainableBondsXLSXInterpreter
+        -> SustainableBondsSheetPicker
+        -> SustainableBondsCellRangeSelector
+        -> SustainableBondsHeaderWriter
+        -> SustainableBondsTableInterpreter
+        -> BondIssuance
+    ;
+
+
+
+// BLOCK DEFINITIONS
+    
+    // Input: None, Output type: File
+    block SustainableBondsHTTPExtractor oftype HttpExtractor {
+        url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
+    }
+    
+    //  input: XLSX-file,  output: Workbook containing Sheets
+    block SustainableBondsXLSXInterpreter oftype XLSXInterpreter { }
+    
+    // Input type: Workbook, Output type: Sheet
+    block SustainableBondsSheetPicker oftype SheetPicker {
+        sheetName: "Figure S5.1.2";
+    }
+
+    // Input type: Sheet, Output type: Sheet
+    block SustainableBondsHeaderWriter oftype CellWriter {
+        at: range P2:S2;
+        write: ["Country Code", "Economy", "GDP per Capita", "Bond Issuance Share"];
+    }    
+
+    // Input type: Sheet, Output type: Sheet
+    block SustainableBondsCellRangeSelector oftype CellRangeSelector {
+        select: range P2:S45;
+    }
+    
+ 
+    // Input type: Sheet, Output type: Table
+    // select columns
+    block SustainableBondsTableInterpreter oftype TableInterpreter {
+        header: false;
+        columns: [
+            "Country Code" oftype ValidCountryCode,    // CountryCodeAlpha3, what's up here?
+            "Economy" oftype text,
+            "GDP per Capita" oftype ValidGDP,
+            "Bond Issuance Share" oftype ValidBondIssuanceShare
+        ];
+    }
+
+    // save as SQLite
+    block BondIssuance oftype SQLiteLoader {
+        table: "bondIssuance";
+        file: "./bondIssuance";
+    }
+
+
+// VALUE TYPES AND CONSTRAINTS
+
+    // value type for Country Code
+    valuetype ValidCountryCode oftype text  {
+        constraints: [NonEmptyCountryCode];
+    }
+
+    // CountryCode must not be empty
+    constraint NonEmptyCountryCode oftype LengthConstraint {
+        minLength: 3;
+    }
+
+
+    // value type for GDP per Capita
+    valuetype ValidGDP oftype decimal {
+        constraints: [PositiveGDP];
+    }
+
+    // GDP per Capita must be decimal >0
+    constraint PositiveGDP on decimal:
+        value > 0;
+    
+
+    // value type for Bond Issuance Share
+
+    valuetype ValidBondIssuanceShare oftype decimal {
+        constraints: [
+            RangeBondIssuanceShare, 
+            NonEmptyBondIssuanceShare
+            ];
+    }
+
+    // Bond Issuance Share must be decimal between 0 and t and not empty
+    constraint RangeBondIssuanceShare on decimal:
+        value >= 0 and value <=1;
+
+    constraint NonEmptyBondIssuanceShare oftype LengthConstraint {
+        minLength: 1;
+    }
+
+}
