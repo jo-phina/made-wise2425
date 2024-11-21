@@ -87,18 +87,18 @@ pipeline bondIssuancePipeline {
 
     valuetype ValidBondIssuanceShare oftype decimal {
         constraints: [
-            RangeBondIssuanceShare, 
-            NonEmptyBondIssuanceShare
+            RangeBondIssuanceShare //, 
+            // NonEmptyBondIssuanceShare
             ];
     }
 
-    // Bond Issuance Share must be decimal between 0 and t and not empty
+    // Bond Issuance Share must be decimal between 0 and 1 and not empty
     constraint RangeBondIssuanceShare on decimal:
         value >= 0 and value <=1;
 
-    constraint NonEmptyBondIssuanceShare oftype LengthConstraint {
-        minLength: 1;
-    }
+    // constraint NonEmptyBondIssuanceShare oftype LengthConstraint {
+    //     minLength: 1;
+    // }
 
 }
 
@@ -109,11 +109,7 @@ pipeline gdpPerCapitaPipeline {
         -> gdpPerCapitaHeaderWriter
         -> gdpPerCapitaCellRangeSelector
         -> gdpPerCapitaTableInterpreter
-        // -> BondIssuanceTableInterpreter
-        // -> GDPperCapitaTableInterpreter
         -> gdpPerCapitaSQLite
-        // -> BondIssuanceSQLite
-        // -> GDPperCapitaSQLite
     ;
 
 
