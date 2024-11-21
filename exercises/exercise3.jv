@@ -1,46 +1,50 @@
-pipeline TrainGoodsPipeline {
-    SustainableBondsHTTPExtractor 
-        -> SustainableBondsXLSXInterpreter
-        -> SustainableBondsSheetPicker
-        -> SustainableBondsHeaderWriter
-        -> SustainableBondsCellRangeSelector
-        -> SustainableBondsTableInterpreter
-        -> BondIssuance
+pipeline CountryStatsPipeline {
+    CountryStatsHTTPExtractor 
+        -> CountryStatsXLSXInterpreter
+        -> CountryStatsSheetPicker
+        -> CountryStatsHeaderWriter
+        -> CountryStatsCellRangeSelector
+        -> CountryStatsTableInterpreter
+        // -> BondIssuanceTableInterpreter
+        // -> GDPperCapitaTableInterpreter
+        -> CountryStatsSQLite
+        // -> BondIssuanceSQLite
+        // -> GDPperCapitaSQLite
     ;
-
 
 
 // BLOCK DEFINITIONS
     
     // Input: None, Output type: File
-    block SustainableBondsHTTPExtractor oftype HttpExtractor {
+    block CountryStatsHTTPExtractor oftype HttpExtractor {
         url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
     }
     
     //  input: XLSX-file,  output: Workbook containing Sheets
-    block SustainableBondsXLSXInterpreter oftype XLSXInterpreter { }
+    block CountryStatsXLSXInterpreter oftype XLSXInterpreter { }
     
     // Input type: Workbook, Output type: Sheet
-    block SustainableBondsSheetPicker oftype SheetPicker {
+    block CountryStatsSheetPicker oftype SheetPicker {
         sheetName: "Figure S5.1.2";
     }
 
     // Input type: Sheet, Output type: Sheet
-    block SustainableBondsHeaderWriter oftype CellWriter {
+    block CountryStatsHeaderWriter oftype CellWriter {
         at: range P2:S2;
         write: ["Country Code", "Economy", "GDP per Capita", "Bond Issuance Share"];
     }    
 
     // Input type: Sheet, Output type: Sheet
-    block SustainableBondsCellRangeSelector oftype CellRangeSelector {
+    block CountryStatsCellRangeSelector oftype CellRangeSelector {
         select: range P2:S45;
     }
     
- 
+
+
     // Input type: Sheet, Output type: Table
     // select columns
-    block SustainableBondsTableInterpreter oftype TableInterpreter {
-        header: false;
+    block CountryStatsTableInterpreter oftype TableInterpreter {
+        header: true;
         columns: [
             "Country Code" oftype ValidCountryCode,    // CountryCodeAlpha3, what's up here?
             "Economy" oftype text,
@@ -49,10 +53,12 @@ pipeline TrainGoodsPipeline {
         ];
     }
 
+
+
     // save as SQLite
-    block BondIssuance oftype SQLiteLoader {
-        table: "bondIssuance";
-        file: "./bondIssuance.sqlite";
+    block CountryStatsSQLite oftype SQLiteLoader {
+        table: "country-stats";
+        file: "./country-stats.sqlite";
     }
 
 
