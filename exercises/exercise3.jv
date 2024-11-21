@@ -1,3 +1,4 @@
+// PIPELINE 1: create bondIssuance table in country-stats.sqlite
 pipeline bondIssuancePipeline {
     bondIssuanceHTTPExtractor 
         -> bondIssuanceXLSXInterpreter
@@ -5,62 +6,58 @@ pipeline bondIssuancePipeline {
         -> bondIssuanceHeaderWriter
         -> bondIssuanceCellRangeSelector
         -> bondIssuanceTableInterpreter
-        // -> BondIssuanceTableInterpreter
-        // -> GDPperCapitaTableInterpreter
         -> bondIssuanceSQLite
-        // -> BondIssuanceSQLite
-        // -> GDPperCapitaSQLite
     ;
 
-
-// BLOCK DEFINITIONS
+// BLOCK DEFINITIONS FOR bondIssuance
     
+    // extract XLSX-file from HTTP
     // Input: None, Output type: File
     block bondIssuanceHTTPExtractor oftype HttpExtractor {
         url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
     }
     
-    //  input: XLSX-file,  output: Workbook containing Sheets
+    // extract Workbook containing Sheets from XLSX-file
+    // input: XLSX-file,  output: Workbook containing Sheets
     block bondIssuanceXLSXInterpreter oftype XLSXInterpreter { }
     
+    // pick only specified sheet
     // Input type: Workbook, Output type: Sheet
     block bondIssuanceSheetPicker oftype SheetPicker {
         sheetName: "Figure S5.1.2";
     }
 
+    // change header-names
     // Input type: Sheet, Output type: Sheet
     block bondIssuanceHeaderWriter oftype CellWriter {
         at: range P2:S2;
         write: ["Country Code", "Economy", "GDP per Capita", "Bond Issuance Share"];
     }    
 
+    // select specified cell range
     // Input type: Sheet, Output type: Sheet
     block bondIssuanceCellRangeSelector oftype CellRangeSelector {
         select: range P2:S45;
     }
     
-
-
+    // select columns for bondIssuance table
     // Input type: Sheet, Output type: Table
-    // select columns
     block bondIssuanceTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
-            "Country Code" oftype ValidCountryCode,    // CountryCodeAlpha3, what's up here?
+            "Country Code" oftype ValidCountryCode,
             "Bond Issuance Share" oftype ValidBondIssuanceShare
         ];
     }
 
-
-
-    // save as SQLite
+    // save bondIssuance table as SQLite
     block bondIssuanceSQLite oftype SQLiteLoader {
         table: "bondIssuance";
         file: "./country-stats.sqlite";
     }
 
 
-// VALUE TYPES AND CONSTRAINTS
+// VALUE TYPES AND CONSTRAINTS FOR bondIssuance
 
     // value type for Country Code
     valuetype ValidCountryCode oftype text  {
@@ -72,19 +69,7 @@ pipeline bondIssuancePipeline {
         minLength: 3;
     }
 
-
-    // value type for GDP per Capita
-    valuetype ValidGDP oftype decimal {
-        constraints: [PositiveGDP];
-    }
-
-    // GDP per Capita must be decimal >0
-    constraint PositiveGDP on decimal:
-        value > 0;
-    
-
     // value type for Bond Issuance Share
-
     valuetype ValidBondIssuanceShare oftype decimal {
         constraints: [
             RangeBondIssuanceShare //, 
@@ -95,12 +80,11 @@ pipeline bondIssuancePipeline {
     // Bond Issuance Share must be decimal between 0 and 1 and not empty
     constraint RangeBondIssuanceShare on decimal:
         value >= 0 and value <=1;
-
-    // constraint NonEmptyBondIssuanceShare oftype LengthConstraint {
-    //     minLength: 1;
-    // }
-
 }
+
+
+
+// PIPELINE 2: create gdpPerCapita table in country-stats.sqlite
 
 pipeline gdpPerCapitaPipeline {
     gdpPerCapitaHTTPExtractor 
@@ -113,54 +97,55 @@ pipeline gdpPerCapitaPipeline {
     ;
 
 
-// BLOCK DEFINITIONS
+// BLOCK DEFINITIONS FOR gdpPerCapita
     
+    // extract XLSX-file from HTTP
     // Input: None, Output type: File
     block gdpPerCapitaHTTPExtractor oftype HttpExtractor {
         url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
     }
     
+    // extract Workbook containing Sheets from XLSX-file
     //  input: XLSX-file,  output: Workbook containing Sheets
     block gdpPerCapitaXLSXInterpreter oftype XLSXInterpreter { }
     
+    // pick only specified sheet
     // Input type: Workbook, Output type: Sheet
     block gdpPerCapitaSheetPicker oftype SheetPicker {
         sheetName: "Figure S5.1.2";
     }
 
+    // change header-names
     // Input type: Sheet, Output type: Sheet
     block gdpPerCapitaHeaderWriter oftype CellWriter {
         at: range P2:S2;
         write: ["Country Code", "Economy", "GDP per Capita", "Bond Issuance Share"];
     }    
 
+    // select specified cell range
     // Input type: Sheet, Output type: Sheet
     block gdpPerCapitaCellRangeSelector oftype CellRangeSelector {
         select: range P2:S45;
     }
     
-
-
+    // select columns for gdpPerCapita table
     // Input type: Sheet, Output type: Table
-    // select columns
     block gdpPerCapitaTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
-            "Country Code" oftype ValidCountryCode,    // CountryCodeAlpha3, what's up here?
+            "Country Code" oftype ValidCountryCode,
             "GDP per Capita" oftype ValidGDP
         ];
     }
 
-
-
-    // save as SQLite
+    // save gdpPerCapita table as SQLite
     block gdpPerCapitaSQLite oftype SQLiteLoader {
         table: "gdpPerCapita";
         file: "./country-stats.sqlite";
     }
 
 
-// VALUE TYPES AND CONSTRAINTS
+// VALUE TYPES AND CONSTRAINTS FOR gdpPerCapita
 
     // value type for Country Code
     valuetype ValidCountryCode oftype text  {
@@ -172,7 +157,6 @@ pipeline gdpPerCapitaPipeline {
         minLength: 3;
     }
 
-
     // value type for GDP per Capita
     valuetype ValidGDP oftype decimal {
         constraints: [PositiveGDP];
@@ -181,23 +165,4 @@ pipeline gdpPerCapitaPipeline {
     // GDP per Capita must be decimal >0
     constraint PositiveGDP on decimal:
         value > 0;
-    
-
-    // value type for Bond Issuance Share
-
-    valuetype ValidBondIssuanceShare oftype decimal {
-        constraints: [
-            RangeBondIssuanceShare, 
-            NonEmptyBondIssuanceShare
-            ];
-    }
-
-    // Bond Issuance Share must be decimal between 0 and t and not empty
-    constraint RangeBondIssuanceShare on decimal:
-        value >= 0 and value <=1;
-
-    constraint NonEmptyBondIssuanceShare oftype LengthConstraint {
-        minLength: 1;
-    }
-
 }
